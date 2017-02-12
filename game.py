@@ -1,5 +1,5 @@
-!#/usr/bin/python3
-
+#!/usr/bin/python3
+import sys
 from sparsematrix import SparseMatrix
 
 # setting this -1 runs the game indifintely! handle with care!!!
@@ -14,6 +14,8 @@ def run_game(matrix):
     3. Any live cell with more than three live neighbours dies, as if by overpopulation.
     4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
     """
+    global run_indefinite
+    
     new_matrix = SparseMatrix()
     iterable_matrix = matrix.get_iterable()
     for coordinates in iterable_matrix:
@@ -25,11 +27,16 @@ def run_game(matrix):
                 for item in newborn_coordinates:
                     new_matrix.add_element(item, 1)
         if surroundings < 2:
-            matrix.add_element(coordinates,0)
+            matrix.add_element(coordinates, 0)
         if surroundings > 3:
             matrix.add_element(coordinates, 0)
         
-    matrix.add_new_elements(new_matrix.get_iterable())
+    
+    matrix.add_new_elements(new_matrix)
+    
+    matrix.cleanup()
+    
+    matrix.print_matrix()
     
     # game run safety checks
     if run_indefinite == -1:
@@ -44,14 +51,16 @@ def run_game(matrix):
         pass
 
 def get_newborn(matrix, coordinates):
-    
+    """
+    Returns the position of newborn cell/s
+    """
     x, y = coordinates
     # left top corner
     if matrix.get_value_at((x+1, y)) == 1 and matrix.get_value_at((x,y-1)) == 1:
         return [(x+1, y-1)]
 
     # right top corner
-    if matrix.get_value_at((x-1,y)) == 1 and matrix.get_value_at(x, y-1) == 1:
+    if matrix.get_value_at((x-1,y)) == 1 and matrix.get_value_at((x, y-1)) == 1:
         return [(x-1, y-1)]
 
     # left bottom corner
@@ -70,48 +79,15 @@ def get_newborn(matrix, coordinates):
 
     return None
 
-def get_newborn_pos(matrix, coordinates):
-    x, y = coordinates
-    neighbours = get_neighbours()
-    iterable_neighbours = neighbours.get_iterable().items()
-    neighbour1 = iterable_neighbours[0]
-    neighbour2 = iterable_neighbours[1]
-
-
-def get_neighbours(matrix, coordinates):
-    """
-    return neightbour matrix of the coordinates
-    """
-    x, y = coordinates
-    neighbours = SparseMatrix()
-
-    if matrix.get_value_at(x-1, y-1):
-        neighbours.add_element((x-1, y-1), 1)
-    if matrix.get_value_at(x-1, y):
-        neighbours.add_element((x-1, y), 1)
-    if matrix.get_value_at(x-1, y+1):
-        neighbours.add_element((x-1, y+1), 1)
-    if matrix.get_value_at(x, y+1):
-        neighbours.add_element((x, y+1), 1)
-    if matrix.get_value_at(x+1, y+1):
-        neighbours.add_element((x+1, y+1), 1)
-    if matrix.get_value_at(x+1, y):
-        neighbours.add_element((x+1, y), 1)
-    if matrix.get_value_at(x+1, y-1):
-        neighbours.add_element((x+1, y-1), 1)
-    if matrix.get_value_at(x, y-1):
-        neighbours.add_element((x, y-1), 1)
-    
-    return neighbours
-
 def main():
     """
     Main function
     """
     matrix = SparseMatrix()
-    matrix.add_element((5, 6), 1)
-    matrix.add_element((5, 7), 1)
     matrix.add_element((4, 6), 1)
+    matrix.add_element((5, 6), 1)
+    matrix.add_element((6, 6), 1)
+
     run_game(matrix)
 
 if __name__ == '__main__':
