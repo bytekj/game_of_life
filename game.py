@@ -27,6 +27,7 @@ def apply_game_rules(matrix):
 
     matrix.add_new_elements(new_matrix)
     matrix.cleanup()
+    return matrix
 
 
 
@@ -40,15 +41,16 @@ def run_game(matrix, run_indefinite):
     # game run safety checks
         if run_indefinite == -1:
             # this runs the game indifintely! handle with care!!!
-            apply_game_rules(matrix)
+            new_matrix = apply_game_rules(matrix)
         if run_indefinite > 0:
             run_indefinite = run_indefinite - 1
-            apply_game_rules(matrix)
+            new_matrix = apply_game_rules(matrix)
         if run_indefinite == 0:
             pass
         if len(matrix.get_iterable()) == 0:
             pass
         matrix.print_matrix()
+        matrix = new_matrix
 
 def get_newborn(matrix, coordinates):
     """
