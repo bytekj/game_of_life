@@ -1,3 +1,4 @@
+https://travis-ci.org/bytekj/game_of_life.svg?branch=master
 ## This is game of life python implementation
 
 - This python implementation uses sparse matrices for implementating the space
