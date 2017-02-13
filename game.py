@@ -21,9 +21,9 @@ def apply_game_rules(matrix):
                 for item in newborn_coordinates:
                     new_matrix.add_element(item, 1)
         if surroundings < 2:
-            matrix.add_element(coordinates, 0)
+            new_matrix.add_element(coordinates, 0)
         if surroundings > 3:
-            matrix.add_element(coordinates, 0)
+            new_matrix.add_element(coordinates, 0)
 
     matrix.add_new_elements(new_matrix)
     matrix.cleanup()
@@ -36,21 +36,21 @@ def run_game(matrix, run_indefinite):
     this function keeps the game running
     """
     keep_running = True
-    
+    tmp_matrix = matrix
     while keep_running:
     # game run safety checks
         if run_indefinite == -1:
             # this runs the game indifintely! handle with care!!!
-            new_matrix = apply_game_rules(matrix)
+            new_matrix = apply_game_rules(tmp_matrix)
         if run_indefinite > 0:
             run_indefinite = run_indefinite - 1
-            new_matrix = apply_game_rules(matrix)
+            new_matrix = apply_game_rules(tmp_matrix)
         if run_indefinite == 0:
-            pass
-        if len(matrix.get_iterable()) == 0:
-            pass
-        matrix.print_matrix()
-        matrix = new_matrix
+            keep_running = False
+        if len(tmp_matrix.get_iterable()) == 0:
+            keep_running = False
+        tmp_matrix.print_matrix()
+        tmp_matrix = new_matrix
 
 def get_newborn(matrix, coordinates):
     """
@@ -86,14 +86,19 @@ def main():
     Main function
     """
     matrix = SparseMatrix()
-    matrix.add_element((4, 6), 1)
-    matrix.add_element((5, 6), 1)
-    matrix.add_element((6, 6), 1)
+    # matrix.add_element((4, 6), 1)
+    # matrix.add_element((5, 6), 1)
+    # matrix.add_element((6, 6), 1)
+
+    matrix.add_element((4, 5), 1)
+    matrix.add_element((5, 5), 1)
+    matrix.add_element((6, 5), 1)
+    matrix.print_matrix()
 
     """
     TODO: add argeparse for handling number of runs to make
     """
-    run_game(matrix, 1)
+    run_game(matrix, 3)
 
 if __name__ == '__main__':
     main()
