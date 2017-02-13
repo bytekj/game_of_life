@@ -8,6 +8,28 @@ from sparsematrix import SparseMatrix
 
 class TestSparseMatrix(unittest.TestCase):
     """
+    Test cases for SparseMatrix functions
+    """
+
+    def test_add_element_live(self):
+        """
+        Test for setting a live cell
+        """
+        matrix = SparseMatrix()
+        matrix.add_element((2, 3), 1)
+        resulting_dict = {(2, 3), 1}
+        self.assertEqual(matrix.get_iterable(), resulting_dict)
+
+    def test_add_element_dead(self):
+        """
+        Test for setting a dead cell
+        """
+        matrix = SparseMatrix()
+        matrix.add_element((2, 3), 0)
+        resulting_dict = {(2, 3): 0}
+        self.assertEqual(matrix.get_iterable(), resulting_dict)
+
+    """
     Test cases for live/dead cells with one or more live neighbour cells
     """
     def test_check_surrounding_two(self):
@@ -47,7 +69,6 @@ class TestSparseMatrix(unittest.TestCase):
         matrix.add_element((4, 6), 1)
 
         self.assertEqual(matrix.check_surrounding((4, 5)), 1)
-
 
 if __name__ == '__main__':
     unittest.main()
