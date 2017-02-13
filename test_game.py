@@ -44,13 +44,22 @@ class TestApplyGameRules(unittest.TestCase):
         matrix.add_element((5, 5), 1)
         matrix.add_element((6, 5), 1)
         resulting_matrix = apply_game_rules(matrix)
-        
+
         expected_result = dict()
         expected_result.update({(5, 6):1, (5, 5):1, (5, 4): 1})
         self.assertEqual(resulting_matrix.get_iterable(), expected_result)
 
     def test_four_neighbours(self):
-        pass
+        matrix = SparseMatrix()
+        matrix.add_element((4, 5), 1)
+        matrix.add_element((5, 5), 1)
+        matrix.add_element((6, 5), 1)
+        matrix.add_element((6, 4), 1)
+        resulting_matrix = apply_game_rules(matrix)
+
+        expected_result = dict()
+        expected_result.update({(5, 6):1, (5, 5):1, (6, 5):1, (6, 4):1})
+        self.assertEqual(resulting_matrix.get_iterable(), expected_result)
 
 if __name__ == '__main__':
     unittest.main()
