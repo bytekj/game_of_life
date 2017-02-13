@@ -19,7 +19,7 @@ class SparseMatrix:
         ------
         None
         """
-        
+
         self.matrix.update({xy_coordinates:value})
 
     def add_new_elements(self, new_matrix):
@@ -58,21 +58,30 @@ class SparseMatrix:
             return 0
 
     def get_iterable(self):
+        """
+        Return the dictionary
+        """
         return self.matrix
 
     def cleanup(self):
+        """
+        Return new dictionary after cleaning up the elements with 0 as value for x, y
+        coordinates
+        """
         new_dict = dict()
         try:
             for key in self.matrix:
                 if self.matrix[key] == 1:
                     new_dict[key] = 1
         except KeyError:
-            import pdb;pdb.set_trace()
             pass
-        
+
         self.matrix = new_dict
 
     def print_matrix(self):
+        """
+        prints the matrix
+        """
         for x,y in self.matrix:
             print(x, y, self.matrix[(x,y)])
         print("---------------------------")

@@ -2,11 +2,7 @@
 import sys
 from sparsematrix import SparseMatrix
 
-# setting this -1 runs the game indifintely! handle with care!!!
-run_indefinite = 1
-
-
-def run_game(matrix):
+def apply_game_rules(matrix):
     """
     Rules of the game
     1. Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
@@ -14,8 +10,6 @@ def run_game(matrix):
     3. Any live cell with more than three live neighbours dies, as if by overpopulation.
     4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
     """
-    global run_indefinite
-    
     new_matrix = SparseMatrix()
     iterable_matrix = matrix.get_iterable()
     for coordinates in iterable_matrix:
@@ -30,25 +24,31 @@ def run_game(matrix):
             matrix.add_element(coordinates, 0)
         if surroundings > 3:
             matrix.add_element(coordinates, 0)
-        
-    
+
     matrix.add_new_elements(new_matrix)
-    
     matrix.cleanup()
+
+
+
+def run_game(matrix, run_indefinite):
+    """
+    this function keeps the game running
+    """
+    keep_running = True
     
-    matrix.print_matrix()
-    
+    while keep_running:
     # game run safety checks
-    if run_indefinite == -1:
-        # this runs the game indifintely! handle with care!!!
-        run_game(matrix)
-    if run_indefinite > 0:
-        run_indefinite = run_indefinite - 1
-        run_game(matrix)
-    if run_indefinite == 0:
-        pass
-    if len(matrix.get_iterable()) == 0:
-        pass
+        if run_indefinite == -1:
+            # this runs the game indifintely! handle with care!!!
+            apply_game_rules(matrix)
+        if run_indefinite > 0:
+            run_indefinite = run_indefinite - 1
+            apply_game_rules(matrix)
+        if run_indefinite == 0:
+            pass
+        if len(matrix.get_iterable()) == 0:
+            pass
+        matrix.print_matrix()
 
 def get_newborn(matrix, coordinates):
     """
@@ -56,11 +56,11 @@ def get_newborn(matrix, coordinates):
     """
     x, y = coordinates
     # left top corner
-    if matrix.get_value_at((x+1, y)) == 1 and matrix.get_value_at((x,y-1)) == 1:
+    if matrix.get_value_at((x+1, y)) == 1 and matrix.get_value_at((x, y-1)) == 1:
         return [(x+1, y-1)]
 
     # right top corner
-    if matrix.get_value_at((x-1,y)) == 1 and matrix.get_value_at((x, y-1)) == 1:
+    if matrix.get_value_at((x-1, y)) == 1 and matrix.get_value_at((x, y-1)) == 1:
         return [(x-1, y-1)]
 
     # left bottom corner
@@ -88,7 +88,10 @@ def main():
     matrix.add_element((5, 6), 1)
     matrix.add_element((6, 6), 1)
 
-    run_game(matrix)
+    """
+    TODO: add argeparse for handling number of runs to make
+    """
+    run_game(matrix, 1)
 
 if __name__ == '__main__':
     main()
