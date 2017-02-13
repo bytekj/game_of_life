@@ -48,3 +48,7 @@ class TestSparseMatrix(unittest.TestCase):
 
         self.assertEqual(matrix.check_surrounding((4, 5)), 1)
 
+
+if __name__ == '__main__':
+    unittest.main()
+    
