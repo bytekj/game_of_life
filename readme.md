@@ -1,4 +1,4 @@
-https://travis-ci.org/bytekj/game_of_life.svg?branch=master
+[![Build Status](https://travis-ci.org/bytekj/game_of_life.svg?branch=master)](https://travis-ci.org/bytekj/game_of_life)
 ## This is game of life python implementation
 
 - This python implementation uses sparse matrices for implementating the space
