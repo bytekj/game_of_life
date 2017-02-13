@@ -14,9 +14,21 @@ class TestGetNewBorn(unittest.TestCase):
         matrix = SparseMatrix()
         matrix.add_element((4, 5), 1)
         matrix.add_element((5, 5), 1)
+        matrix.add_element((6, 5), 1)
+        matrix.add_element((6, 4), 1)
         matrix.add_element((4, 4), 1)
-        result = get_newborn(matrix, (4, 5))
-        self.assertEqual(result, [(5, 4)])
+        matrix.add_element((5, 6), 1)
+        result = get_newborn(matrix, (5, 5))
+
+        self.assertEqual(set(result), set([(4, 6), (6, 6)]))
+
+    def test_get_newborn_three_neighbours(self):
+        matrix = SparseMatrix()
+        matrix.add_element((4, 5), 1)
+        matrix.add_element((5, 5), 1)
+        matrix.add_element((6, 5), 1)
+        result = get_newborn(matrix, (5, 5))
+        self.assertEqual(set(result), set([(5, 6), (5, 4)]))
 
 class TestApplyGameRules(unittest.TestCase):
     def test_two_neighbours(self):
@@ -44,7 +56,6 @@ class TestApplyGameRules(unittest.TestCase):
         matrix.add_element((5, 5), 1)
         matrix.add_element((6, 5), 1)
         resulting_matrix = apply_game_rules(matrix)
-
         expected_result = dict()
         expected_result.update({(5, 6):1, (5, 5):1, (5, 4): 1})
         self.assertEqual(resulting_matrix.get_iterable(), expected_result)
@@ -55,10 +66,27 @@ class TestApplyGameRules(unittest.TestCase):
         matrix.add_element((5, 5), 1)
         matrix.add_element((6, 5), 1)
         matrix.add_element((6, 4), 1)
+        
         resulting_matrix = apply_game_rules(matrix)
 
         expected_result = dict()
         expected_result.update({(5, 6):1, (5, 5):1, (6, 5):1, (6, 4):1})
+        self.assertEqual(resulting_matrix.get_iterable(), expected_result)
+
+    def test_six_neighbours(self):
+        matrix = SparseMatrix()
+        matrix.add_element((4, 5), 1)
+        matrix.add_element((5, 5), 1)
+        matrix.add_element((6, 5), 1)
+        matrix.add_element((6, 4), 1)
+        matrix.add_element((4, 4), 1)
+        matrix.add_element((5, 6), 1)
+
+        resulting_matrix = apply_game_rules(matrix)
+
+        expected_result = dict()
+        expected_result.update({(5, 6):1, (6, 5):1, (6, 4):1, (4, 6):1,
+                                (4, 5):1, (4, 4):1, (6, 6):1})
         self.assertEqual(resulting_matrix.get_iterable(), expected_result)
 
 if __name__ == '__main__':

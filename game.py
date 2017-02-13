@@ -13,8 +13,9 @@ def apply_game_rules(matrix):
     new_matrix = SparseMatrix()
     iterable_matrix = matrix.get_iterable()
     for coordinates in iterable_matrix:
+        # import pdb;pdb.set_trace()
         surroundings = matrix.check_surrounding(coordinates)
-        if surroundings == 2:
+        if surroundings >= 2:
             # this means there will be a newborn around this
             newborn_coordinates = get_newborn(matrix, coordinates)
             if newborn_coordinates != None:
@@ -55,31 +56,85 @@ def run_game(matrix, run_indefinite):
 def get_newborn(matrix, coordinates):
     """
     Returns the position of newborn cell/s
+    after marking a cell as newborn crosscheck that it has 3 cells surrounding, because
+    this function will be called when there are 3 or 4 live neighbours too.
     """
+
+    new_matrix = SparseMatrix()
+    new_matrix.add_new_elements(matrix)
     x, y = coordinates
+    newborn = []
+
     # left top corner
     if matrix.get_value_at((x+1, y)) == 1 and matrix.get_value_at((x, y-1)) == 1:
-        return [(x+1, y-1)]
+        if matrix.get_value_at((x+1, y-1)) != 1:
+            new_matrix.add_element((x+1, y-1), 1)
+            if new_matrix.check_surrounding((x+1, y-1)) == 3:
+                newborn.append((x+1, y-1))
+
+            new_matrix.add_element((x+1, y-1), 0)
+            new_matrix.cleanup()
 
     # right top corner
     if matrix.get_value_at((x-1, y)) == 1 and matrix.get_value_at((x, y-1)) == 1:
-        return [(x-1, y-1)]
+        if matrix.get_value_at((x-1, y-1)) != 1:
+            new_matrix.add_element((x-1, y-1), 1)
+            if new_matrix.check_surrounding((x-1, y-1)) == 3:
+                newborn.append((x-1, y-1))
+
+            new_matrix.add_element((x-1, y-1), 0)
+            new_matrix.cleanup()
+
 
     # left bottom corner
     if matrix.get_value_at((x, y+1)) == 1 and matrix.get_value_at((x+1, y)) == 1:
-        return [(x+1, y+1)]
+        if matrix.get_value_at((x+1, y+1)) != 1:
+            new_matrix.add_element((x+1, y+1), 1)
+            if new_matrix.check_surrounding((x+1, y+1)) == 3:
+                newborn.append((x+1, y+1))
+            new_matrix.add_element((x+1, y+1), 0)
+            new_matrix.cleanup()
 
     # right bottom corner
     if matrix.get_value_at((x-1, y)) == 1 and matrix.get_value_at((x, y+1)) == 1:
-        return [(x-1, y+1)]
+        if matrix.get_value_at((x-1, y+1)) != 1:
+            new_matrix.add_element((x-1, y+1), 1)
+            if new_matrix.check_surrounding((x-1, y+1)) == 3:
+                newborn.append((x-1, y+1))
+            new_matrix.add_element((x-1, y+1), 0)
+            new_matrix.cleanup()
 
     # vertical or horizontal line
     if matrix.get_value_at((x-1, y)) == 1 and matrix.get_value_at((x+1, y)) == 1:
-        return [(x, y+1), (x, y-1)]
-    if matrix.get_value_at((x, y+1)) == 1 and matrix.get_value_at((x, y-1)) == 1:
-        return [(x-1, y), (x+1, y)]
+        
+        if matrix.get_value_at((x, y+1)) != 1:
+            new_matrix.add_element((x, y+1), 1)
+            if new_matrix.check_surrounding((x, y+1)) == 3:
+                newborn.append((x, y+1))
+            new_matrix.add_element((x, y+1), 0)
+            new_matrix.cleanup()
+        if matrix.get_value_at((x, y-1)) != 1:
+            new_matrix.add_element((x, y-1), 1)
+            if new_matrix.check_surrounding((x, y-1)) == 3:
+                newborn.append((x, y-1))
+            new_matrix.add_element((x, y-1), 0)
+            new_matrix.cleanup()
 
-    return None
+    if matrix.get_value_at((x, y+1)) == 1 and matrix.get_value_at((x, y-1)) == 1:
+        if matrix.get_value_at((x-1, y)) != 1:
+            new_matrix.add_element((x-1, y), 1)
+            if new_matrix.check_surrounding((x-1, y)) == 3:
+                newborn.append((x-1, y))
+            new_matrix.add_element((x-1, y), 0)
+            new_matrix.cleanup()
+        if matrix.get_value_at((x+1, y)) != 1:
+            new_matrix.add_element((x+1, y), 1)
+            if new_matrix.check_surrounding((x+1, y)) == 3:
+                newborn.append((x+1, y))
+            new_matrix.add_element((x+1, y), 0)
+            new_matrix.cleanup()
+
+    return newborn
 
 def main():
     """
@@ -95,6 +150,13 @@ def main():
     matrix.add_element((6, 5), 1)
     matrix.print_matrix()
 
+
+    # matrix.add_element((4, 5), 1)
+    # matrix.add_element((5, 5), 1)
+    # matrix.add_element((6, 5), 1)
+    # matrix.add_element((6, 4), 1)
+    # matrix.add_element((4, 4), 1)
+    # matrix.add_element((5, 6), 1)
     """
     TODO: add argeparse for handling number of runs to make
     """
