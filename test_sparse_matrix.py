@@ -17,7 +17,7 @@ class TestSparseMatrix(unittest.TestCase):
         """
         matrix = SparseMatrix()
         matrix.add_element((2, 3), 1)
-        resulting_dict = {(2, 3), 1}
+        resulting_dict = {(2, 3): 1}
         self.assertEqual(matrix.get_iterable(), resulting_dict)
 
     def test_add_element_dead(self):
